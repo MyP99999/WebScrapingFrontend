@@ -16,13 +16,13 @@ function App() {
       setData(null); // Reset data state
       setLoading(true); // Set loading to true as scraping begins
       setError(''); // Reset error state
-      
+
       // Fetch request to the server to initiate scraping
       const response = await fetch('http://localhost:3001/api/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          url, 
+        body: JSON.stringify({
+          url,
           elements: elements.split(',').map(e => e.trim()) // Convert elements string to array and remove any extra spaces
         }),
       });
@@ -43,32 +43,50 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {/* Input for URL */}
-      <input 
-        type="text" 
-        value={url} 
-        onChange={(e) => setUrl(e.target.value)} 
-        placeholder="Enter URL" 
-      />
+    <div className="flex flex-col items-center bg-slate-300 min-h-screen p-4 space-y-4">
+      {/* Container for Input and Buttons */}
+      <div className="flex flex-col items-center justify-center space-y-2 w-full max-w-md">
+        {/* Input for URL */}
+        <input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Enter URL"
+          className="px-4 py-2 w-full border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      {/* Input for Elements */}
-      <input 
-        type="text" 
-        value={elements} 
-        onChange={(e) => setElements(e.target.value)} 
-        placeholder="Enter Elements, e.g., h3,p" 
-      />
+        {/* Input for Elements */}
+        <input
+          type="text"
+          value={elements}
+          onChange={(e) => setElements(e.target.value)}
+          placeholder="Enter Elements, e.g., h3,p"
+          className="px-4 py-2 w-full border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
 
-      {/* Scrape Button */}
-      <button onClick={handleScrape} disabled={loading}>Scrape</button>
+        {/* Scrape Button */}
+        <button
+          onClick={handleScrape}
+          disabled={loading}
+          className={`px-6 py-2 bg-blue-600 w-1/2 text-white  rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+        >
+          Scrape
+        </button>
+      </div>
 
       {/* Display loading, data, or error messages */}
-      {loading && <p>Loading...</p>}
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
-      {error && <p>{error}</p>}
+      {loading && <p className="text-gray-500">Loading...</p>}
+      {data && (
+        <div className="w-full max-w-screen-md">
+          <pre className="text-sm bg-blue-600 text-white p-4 border-2 border-black rounded-lg overflow-auto whitespace-pre-wrap">
+            {JSON.stringify(data, null, 2)}
+          </pre>
+        </div>
+      )}
+      {error && <p className="text-red-500 font-semibold text-xl">{error}</p>}
     </div>
   );
+
 }
 
 export default App;
